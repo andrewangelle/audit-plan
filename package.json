@@ -34,7 +34,7 @@
     "pre-commit": "lint-staged",
     "prepare": "husky",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && node scripts/sync-plugin-version.mjs",
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {

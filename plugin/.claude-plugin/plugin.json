@@ -1,0 +1,8 @@
+{
+  "name": "audit-plan",
+  "description": "Audit an implementation plan against the codebase and fix it until it passes",
+  "version": "1.0.0",
+  "author": { "name": "Andrew Angelle" },
+  "repository": "https://github.com/andrewangelle/audit-plan",
+  "license": "MIT"
+}

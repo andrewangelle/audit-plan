@@ -19,9 +19,22 @@ Built on the [Claude Agent SDK](https://www.npmjs.com/package/@anthropic-ai/clau
 
 ## Install
 
+### CLI
+
 ```sh
-TBD
+npm install -g audit-plan
 ```
+
+Or run it without installing via `npx -y audit-plan`.
+
+### Claude Code plugin
+
+```sh
+claude plugin marketplace add andrewangelle/audit-plan
+claude plugin install audit-plan@audit-plan
+```
+
+Then, in a session: `/audit-plan:audit-plan <plan> [options]`. The plugin runs the CLI through `npx`.
 
 ## Usage
 
