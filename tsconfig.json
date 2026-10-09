@@ -5,11 +5,7 @@
     "module": "NodeNext",
     "target": "ESNext",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "rewriteRelativeImportExtensions": true,
-    "allowImportingTsExtensions": true,
-    "paths": {
-      "#root/*": ["./src/*"]
-    }
-  }
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.mts"]
 }

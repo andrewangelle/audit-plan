@@ -1,17 +1,22 @@
 {
-  "name": "ts-template-node",
+  "name": "audit-plan",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "author": "andrewangelle@gmail.com",
   "license": "MIT",
-  "main": "src/index.mts",
+  "main": "dist/cli.mjs",
   "type": "module",
   "imports": {
-    "#root/*": "./src/*"
+    "#src/*.mjs": {
+      "types": "./src/*.mts",
+      "default": "./dist/*.mjs"
+    }
+  },
+  "bin": {
+    "audit-plan": "dist/cli.mjs"
   },
   "scripts": {
-    "start": "node ./src/index.mts",
     "build": "pnpm exec tsc",
     "lint:fix": "pnpm exec biome check . --write",
     "lint:check": "pnpm exec biome check .",
@@ -33,6 +38,10 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=22.0.0"
-  }
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.292"
+  },
+  "packageManager": "pnpm@12.10.1+sha512.ba40a37eb1a370d60fea8c4cf1d364c13bcccef518e98ad2bcee954f539d38da37458e58261a3fa55e06523450ea0ffff9f497b135be41f2c15c1642bacace6c"
 }
