@@ -1,0 +1,38 @@
+{
+  "name": "ts-template-node",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "andrewangelle@gmail.com",
+  "license": "MIT",
+  "main": "src/index.mts",
+  "type": "module",
+  "imports": {
+    "#root/*": "./src/*"
+  },
+  "scripts": {
+    "start": "node ./src/index.mts",
+    "build": "pnpm exec tsc",
+    "lint:fix": "pnpm exec biome check . --write",
+    "lint:check": "pnpm exec biome check .",
+    "format": "pnpm exec biome format . --write",
+    "pre-commit": "lint-staged",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mts,mjs}": [
+      "pnpm lint:fix",
+      "pnpm format"
+    ]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.9",
+    "@types/node": "^26.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

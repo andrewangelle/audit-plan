@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "js/ts.tsdk": "node_modules/typescript/lib",
+  "js/ts.experimental.useTsgo": true,
+
+  // Enable fast, modern inlay hints for parameters and types (highly optimized in TS 7)
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.variableTypes.enabled": true,
+
+  // Speed up large codebases by disabling older, redundant background parsing
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": false
+}

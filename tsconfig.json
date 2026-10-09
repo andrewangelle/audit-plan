@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "types": ["@types/node"],
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "target": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "#root/*": ["./src/*"]
+    }
+  }
+}
