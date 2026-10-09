@@ -29,6 +29,10 @@ TBD
 audit-plan <plan> [options]
 ```
 
+```sh
+npx -y audit-plan <plan> [options]
+```
+
 `<plan>` is resolved in this order:
 
 1. a path relative to the current directory
