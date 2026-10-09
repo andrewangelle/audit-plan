@@ -40,11 +40,11 @@ jobs:
 
       - name: Create release PR or publish to npm
         uses: changesets/action@v2
-    with:
-      version-script: pnpm version-packages
-      publish-script: pnpm release
-      pr-title: "chore: version packages"
-      commit-message: "chore: version packages"
-      create-github-releases: true
-      github-token: ${{ secrets.GITHUB_TOKEN }}
-          
+        with:
+          version-script: pnpm version-packages
+          publish-script: pnpm release
+          pr-title: "chore: version packages"
+          commit-message: "chore: version packages"
+          create-github-releases: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+              
