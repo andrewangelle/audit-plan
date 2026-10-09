@@ -5,6 +5,10 @@
   "keywords": [],
   "author": "andrewangelle@gmail.com",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewangelle/audit-plan.git"
+  },
   "main": "dist/cli.mjs",
   "type": "module",
   "imports": {
@@ -16,32 +20,41 @@
   "bin": {
     "audit-plan": "dist/cli.mjs"
   },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm exec tsc",
     "lint:fix": "pnpm exec biome check . --write",
     "lint:check": "pnpm exec biome check .",
     "format": "pnpm exec biome format . --write",
     "pre-commit": "lint-staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,mts,mjs}": [
-      "pnpm lint:fix",
-      "pnpm format"
-    ]
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.292"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.9",
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@types/node": "^26.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "typescript": "^7.0.2"
   },
-  "engines": {
-    "node": ">=24.0.0"
-  },
-  "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.3.292"
+
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mts,mjs}": [
+      "pnpm lint:fix",
+      "pnpm format"
+    ]
   },
   "packageManager": "pnpm@12.10.1+sha512.ba40a37eb1a370d60fea8c4cf1d364c13bcccef518e98ad2bcee954f539d38da37458e58261a3fa55e06523450ea0ffff9f497b135be41f2c15c1642bacace6c"
 }
