@@ -1,0 +1,12 @@
+{
+  "name": "audit-plan",
+  "description": "Claude Code plugin for audit-plan",
+  "owner": { "name": "Andrew Angelle" },
+  "plugins": [
+    {
+      "name": "audit-plan",
+      "source": "./plugin",
+      "description": "Audit an implementation plan against the codebase and fix it until it passes"
+    }
+  ]
+}
