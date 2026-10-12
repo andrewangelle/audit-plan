@@ -5,14 +5,20 @@ import {
   query,
 } from '@anthropic-ai/claude-agent-sdk';
 import { LOAD_PROJECT_CONTEXT, REPO_ROOT } from '#src/constants.mjs';
-import { AUDIT_PROMPT, FIX_PROMPT } from '#src/prompt.mjs';
 import {
-  colors,
-  colorVerdicts,
-  errorColors,
-  sha,
-  verdictIsPass,
-} from '#src/utils.mjs';
+  logAuditEnd,
+  logAuditFail,
+  logAuditPass,
+  logAuditStart,
+  logFixEnd,
+  logFixNoChange,
+  logFixStart,
+  logMaxIters,
+  logPlanUpdated,
+  logToolUse,
+} from '#src/logging.mjs';
+import { AUDIT_PROMPT, FIX_PROMPT } from '#src/prompt.mjs';
+import { sha, verdictIsPass } from '#src/utils.mjs';
 
 export type MainArgs = {
   plan: string;
@@ -52,14 +58,9 @@ export async function main({
 
   let clean = 0;
   let totalCost = 0;
-  const bar = (ch: string) => ch.repeat(60);
 
   for (let i = 1; i <= maxIters; i++) {
-    console.log(
-      colors.audit(
-        `\n${bar('=')}\n=== Iteration ${i}: AUDIT (${auditModel}/${auditEffort})\n${bar('=')}`,
-      ),
-    );
+    logAuditStart(auditModel, auditEffort, i);
 
     const audit = await run({
       prompt: AUDIT_PROMPT({ plan, scope, testsClause }),
@@ -72,35 +73,24 @@ export async function main({
 
     totalCost += audit.cost;
 
-    console.log(
-      colorVerdicts(audit.text.trim()) || colors.dim('(no audit output)\n'),
-    );
-    console.log(
-      colors.dim(
-        `[audit ${audit.subtype}]  step $${audit.cost.toFixed(4)}  running $${totalCost.toFixed(4)}`,
-      ),
-    );
+    logAuditEnd(audit, totalCost);
 
     if (audit.subtype !== 'success') {
-      console.error(
-        errorColors.error(
-          `Audit did not complete cleanly (${audit.subtype}); stopping.`,
-        ),
-      );
+      logAuditFail(audit.subtype);
       return 1;
     }
 
     if (verdictIsPass(audit.text)) {
       clean++;
 
-      console.log(colors.ok(`Clean audit (${clean}/${requiredClean})`));
+      logAuditPass({
+        cleanPasses: clean,
+        minimumCleanPasses: requiredClean,
+        totalRuns: i,
+        totalCost,
+      });
 
       if (clean >= requiredClean) {
-        console.log(
-          colors.success(
-            `\n[+] Converged after ${i} iterations. Total $${totalCost.toFixed(4)}`,
-          ),
-        );
         return 0;
       }
       continue;
@@ -110,11 +100,7 @@ export async function main({
     clean = 0;
     const before = sha(plan);
 
-    console.log(
-      colors.fix(
-        `\n${bar('-')}\n--- Iteration ${i}: FIX (${fixModel}/${fixEffort})\n${bar('-')}`,
-      ),
-    );
+    logFixStart(fixModel, fixEffort, i);
 
     const fix = await run({
       prompt: FIX_PROMPT({ plan, findings: audit.text }),
@@ -130,37 +116,16 @@ export async function main({
 
     totalCost += fix.cost;
 
-    console.log(fix.text.trim() || colors.dim('(no fix summary)'));
-    console.log(
-      colors.dim(
-        `\n[fix ${fix.subtype}]  step $${fix.cost.toFixed(4)}  running $${totalCost.toFixed(4)}`,
-      ),
-    );
+    logFixEnd(fix, totalCost);
 
     if (sha(plan) === before) {
-      console.error(
-        errorColors.warn('\n[!] The fix step made NO change to the plan file.'),
-      );
-      console.error(
-        errorColors.warn(
-          '    Either there was nothing concrete to change, or the fixer',
-        ),
-      );
-      console.error(
-        errorColors.warn(
-          "    could not apply edits. Stopping so it doesn't spin.",
-        ),
-      );
+      logFixNoChange();
       return 1;
     }
-    console.log(colors.dim('\n    plan updated -> re-auditing...'));
+    logPlanUpdated();
   }
 
-  console.error(
-    errorColors.warn(
-      `\n[!] Hit max-iters (${maxIters}) without converging. Total $${totalCost.toFixed(4)}`,
-    ),
-  );
+  logMaxIters(maxIters, totalCost);
   return 1;
 }
 
@@ -217,9 +182,12 @@ async function run({
           turn++;
           const inp = (block.input ?? {}) as Record<string, unknown>;
           const detail = inp.file_path ?? inp.pattern ?? inp.command ?? '';
-          console.log(
-            `  ${colors.dim(`[${turn}/${turnCap}]`)} ${colors.tool(block.name)} ${colors.dim(String(detail))}`,
-          );
+          logToolUse({
+            turn,
+            turnCap,
+            toolName: block.name,
+            detail: String(detail),
+          });
         }
       }
     } else if (msg.type === 'result') {

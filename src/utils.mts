@@ -2,41 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { styleText } from 'node:util';
 import { PLANS_DIR } from '#src/constants.mjs';
-
-// ---- Colors ------------------------------------------------------------------
-export type Style = Parameters<typeof styleText>[0];
-
-export const toStdout = (format: Style) => (text: string) =>
-  styleText(format, text, { stream: process.stdout });
-
-export const toStderr = (format: Style) => (text: string) =>
-  styleText(format, text, { stream: process.stderr });
-
-export const colors = {
-  audit: toStdout(['bold', 'cyan']),
-  fix: toStdout(['bold', 'magenta']),
-  tool: toStdout('blue'),
-  dim: toStdout('dim'),
-  pass: toStdout(['bold', 'green']),
-  fail: toStdout(['bold', 'red']),
-  ok: toStdout('green'),
-  success: toStdout(['bold', 'green']),
-};
-
-export const errorColors = {
-  error: toStderr('red'),
-  warn: toStderr('yellow'),
-  bold: toStderr('bold'),
-};
-
-/** Highlight the VERDICT line(s) in an agent's output. */
-export function colorVerdicts(text: string): string {
-  return text
-    .replace(/^VERDICT:\s*PASS\b.*$/gim, (line) => colors.pass(line))
-    .replace(/^VERDICT:\s*FAIL\b.*$/gim, (line) => colors.fail(line));
-}
 
 export function sha(path: string): string {
   try {
