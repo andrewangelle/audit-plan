@@ -16,7 +16,7 @@ import {
 } from '#src/constants.mjs';
 import { colors, errorColors } from '#src/logging.mjs';
 import { main } from '#src/main.mjs';
-import { isFile, resolvePlan } from '#src/utils.mjs';
+import { isFile, resolvePlan, splitPaths } from '#src/utils.mjs';
 
 const USAGE = `
 Usage: 
@@ -148,10 +148,7 @@ const turnCap = positiveInt('--turn-cap', values['turn-cap']);
 const auditEffort = effort('--audit-effort', values['audit-effort']);
 const fixEffort = effort('--fix-effort', values['fix-effort']);
 
-// Accept `--paths "a b"`, `--paths a,b`, and repeated `--paths a --paths b`.
-const scopePaths = values.paths
-  .flatMap((p) => p.split(/[\s,]+/))
-  .filter(Boolean);
+const scopePaths = splitPaths(values.paths);
 
 const result = await main({
   plan,

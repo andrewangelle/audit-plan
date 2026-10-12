@@ -14,6 +14,7 @@
   "imports": {
     "#src/*.mjs": {
       "types": "./src/*.mts",
+      "source": "./src/*.mts",
       "default": "./dist/*.mjs"
     }
   },
@@ -28,6 +29,8 @@
   ],
   "scripts": {
     "build": "pnpm exec tsc",
+    "test": "node --conditions=source --test \"test/**/*.test.mts\"",
+    "test:update-snapshots": "node --conditions=source --test --test-update-snapshots \"test/**/*.test.mts\"",
     "lint:fix": "pnpm exec biome check . --write",
     "lint:check": "pnpm exec biome check .",
     "format": "pnpm exec biome format . --write",
