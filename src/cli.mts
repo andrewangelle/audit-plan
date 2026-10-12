@@ -14,8 +14,9 @@ import {
   REQUIRED_CLEAN,
   TURN_CAP,
 } from '#src/constants.mjs';
+import { colors, errorColors } from '#src/logging.mjs';
 import { main } from '#src/main.mjs';
-import { colors, errorColors, isFile, resolvePlan } from '#src/utils.mjs';
+import { isFile, resolvePlan } from '#src/utils.mjs';
 
 const USAGE = `
 Usage: 
