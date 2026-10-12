@@ -6,7 +6,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "audit-plan"
+      "repo": "andrewangelle/audit-plan"
     }
   ],
   "commit": true,
