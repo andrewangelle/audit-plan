@@ -33,18 +33,21 @@ export type MainArgs = {
   turnCap: number;
 };
 
-export async function main({
-  plan,
-  scopePaths,
-  testCmd,
-  maxIters,
-  auditModel,
-  fixModel,
-  auditEffort,
-  fixEffort,
-  requiredClean,
-  turnCap,
-}: MainArgs): Promise<number> {
+export async function main(
+  {
+    plan,
+    scopePaths,
+    testCmd,
+    maxIters,
+    auditModel,
+    fixModel,
+    auditEffort,
+    fixEffort,
+    requiredClean,
+    turnCap,
+  }: MainArgs,
+  runAgent: RunFn = run,
+): Promise<number> {
   const scope =
     scopePaths.map((p) => `  - ${p}`).join('\n') || '  - (whole repo)';
   let testsClause = '';
@@ -62,7 +65,7 @@ export async function main({
   for (let i = 1; i <= maxIters; i++) {
     logAuditStart(auditModel, auditEffort, i);
 
-    const audit = await run({
+    const audit = await runAgent({
       prompt: AUDIT_PROMPT({ plan, scope, testsClause }),
       model: auditModel,
       effort: auditEffort,
@@ -102,7 +105,7 @@ export async function main({
 
     logFixStart(fixModel, fixEffort, i);
 
-    const fix = await run({
+    const fix = await runAgent({
       prompt: FIX_PROMPT({ plan, findings: audit.text }),
       model: fixModel,
       effort: fixEffort,
@@ -130,13 +133,13 @@ export async function main({
 }
 
 /** One headless call. */
-type RunResult = {
+export type RunResult = {
   text: string;
   subtype: string;
   cost: number;
 };
 
-type RunArgs = {
+export type RunArgs = {
   prompt: string;
   model: string;
   effort: EffortLevel;
@@ -145,6 +148,8 @@ type RunArgs = {
   disallowedTools?: string[];
   turnCap: number;
 };
+
+export type RunFn = (args: RunArgs) => Promise<RunResult>;
 
 async function run({
   prompt,

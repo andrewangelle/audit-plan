@@ -18,6 +18,11 @@ export function verdictIsPass(text: string): boolean {
   return verdicts.length > 0 && verdicts.at(-1)?.[1].toUpperCase() === 'PASS';
 }
 
+/** Accept `--paths "a b"`, `--paths a,b`, and repeated `--paths a --paths b`. */
+export function splitPaths(values: string[]): string[] {
+  return values.flatMap((p) => p.split(/[\s,]+/)).filter(Boolean);
+}
+
 export const isFile = (filePath: string) =>
   existsSync(filePath) && statSync(filePath).isFile();
 
